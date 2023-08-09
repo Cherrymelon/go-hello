@@ -22,7 +22,7 @@ go.work
 # Go dir
 bin/*
 build/*
-pkg/*
+pkg/
 vendor/
 .idea/
 .gitignore
