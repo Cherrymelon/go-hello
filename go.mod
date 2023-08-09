@@ -2,7 +2,10 @@ module go-hello
 
 go 1.20
 
-require github.com/gofiber/fiber/v2 v2.48.0
+require (
+	github.com/gofiber/fiber/v2 v2.48.0
+	gopkg.in/yaml.v3 v3.0.1
+)
 
 require (
 	github.com/andybalholm/brotli v1.0.5 // indirect
@@ -16,5 +19,4 @@ require (
 	github.com/valyala/fasthttp v1.48.0 // indirect
 	github.com/valyala/tcplisten v1.0.0 // indirect
 	golang.org/x/sys v0.11.0 // indirect
-	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
