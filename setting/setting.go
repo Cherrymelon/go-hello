@@ -2,10 +2,14 @@ package setting
 
 import (
 	"fmt"
+	"go-hello/web/models"
+	"gorm.io/driver/mysql"
+	"gorm.io/gorm"
 	"io"
 	"log"
 	"os"
 )
+
 import "gopkg.in/yaml.v3"
 
 type Config struct {
@@ -78,5 +82,18 @@ func copy_file(src, dst string) error {
 	if err != nil {
 		return err
 	}
+	return nil
+}
+
+var Db *gorm.DB
+
+func Connect(config Config) error {
+	dsn := fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%d sslmode=disable TimeZone=Asia/Shangha",
+		config.Database.host, config.Database.user, config.Database.password, config.Database.db, config.Database.port)
+	Db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
+	if err != nil {
+		return err
+	}
+	Db.AutoMigrate(&models.Order{})
 	return nil
 }

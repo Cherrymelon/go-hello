@@ -14,6 +14,10 @@ func Register(app *fiber.App) {
 	user := app.Group("/user")
 	user.Post("/login", login.Login)
 
-	app.Get("/info/:phone", phone.Info)
-	app.Get("/info/:phone/json", phone.Info_json)
+	info := app.Group("/info")
+	info.Get("/:phone", phone.Info)
+	info.Get("/:phone/json", phone.Info_json)
+	info.Get("/phone_order/:order_id", phone.GetPhoneOrder)
+	info.Post("/phone_order", phone.CreatePhoneOrder)
+	info.Put("/phone_order/:order_id", phone.UpdatePhoneOrder)
 }

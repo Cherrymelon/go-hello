@@ -24,13 +24,19 @@ import (
 func main() {
 
 	config := setting.Load_config()
+	err := setting.Connect(config)
+	if err != nil {
+		log.Fatal(err)
+	}
+
 	app := fiber.New(fiber.Config{
 		Prefork: config.WebServer.Prefork,
 	})
 
 	app.Use(logger.New())
-	app.Get("/*", swagger.HandlerDefault)
+
 	urls.Register(app)
+	app.Get("/*", swagger.HandlerDefault)
 	log.Fatal(app.Listen(config.WebServer.Host + ":" + fmt.Sprintf("%d", config.WebServer.Port)))
 
 }
