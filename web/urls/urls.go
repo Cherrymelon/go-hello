@@ -17,7 +17,7 @@ func Register(app *fiber.App) {
 	info := app.Group("/info")
 	info.Get("/:phone", phone.Info)
 	info.Get("/:phone/json", phone.Info_json)
-	info.Get("/phone_order/:order_id", phone.GetPhoneOrder)
+	info.Get("/phone_order/:id", phone.GetPhoneOrder)
 	info.Post("/phone_order", phone.CreatePhoneOrder)
-	info.Put("/phone_order/:order_id", phone.UpdatePhoneOrder)
+	info.Put("/phone_order/:id", phone.UpdatePhoneOrder)
 }

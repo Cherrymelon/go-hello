@@ -19,17 +19,17 @@ type Config struct {
 }
 
 type Redis struct {
-	host string `yaml:"host"`
-	port int    `yaml:"port"`
-	db   int    `yaml:"db"`
+	Host string `yaml:"host"`
+	Port int    `yaml:"port"`
+	Db   int    `yaml:"db"`
 }
 
 type Database struct {
-	host     string `yaml:"host"`
-	user     string `yaml:"user"`
-	db       string `yaml:"db"`
-	password string `yaml:"password"`
-	port     int    `yaml:"port"`
+	Host     string `yaml:"host"`
+	User     string `yaml:"user"`
+	Db       string `yaml:"db"`
+	Password string `yaml:"password"`
+	Port     int    `yaml:"port"`
 }
 
 type WebServer struct {
@@ -39,7 +39,7 @@ type WebServer struct {
 }
 
 func Load_config() Config {
-	err := copy_file("./dev.yaml", "./env.yaml")
+	err := copyFile("./dev.yaml", "./env.yaml")
 	if err != nil {
 		log.Fatal("copy file error")
 	}
@@ -50,13 +50,13 @@ func Load_config() Config {
 	config := Config{}
 	err = yaml.Unmarshal(content, &config)
 	if err != nil {
-		log.Fatal("unmarshal error")
+		log.Fatal("unmarshal error", err.Error())
 	}
-	fmt.Printf("config: %v", config)
+	fmt.Printf("config: %+v", config)
 	return config
 }
 
-func copy_file(src, dst string) error {
+func copyFile(src, dst string) error {
 	file, err := os.Open(src)
 	if err != nil {
 		return err
@@ -88,8 +88,7 @@ func copy_file(src, dst string) error {
 var Db *gorm.DB
 
 func Connect(config Config) error {
-	dsn := fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%d sslmode=disable TimeZone=Asia/Shangha",
-		config.Database.host, config.Database.user, config.Database.password, config.Database.db, config.Database.port)
+	dsn := fmt.Sprintf("%s:%s@tcp(%s:%d)/%s?charset=utf8mb4&parseTime=True&loc=Local", config.Database.User, config.Database.Password, config.Database.Host, config.Database.Port, config.Database.Db)
 	Db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
 	if err != nil {
 		return err
