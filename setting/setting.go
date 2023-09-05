@@ -94,6 +94,6 @@ func Connect(config Config) error {
 	if err != nil {
 		return err
 	}
-	Db.AutoMigrate(&models.Order{})
+	Db.AutoMigrate(&models.Order{}, &models.User{}, &models.Session{})
 	return nil
 }
