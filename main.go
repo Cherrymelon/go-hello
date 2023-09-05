@@ -23,7 +23,7 @@ import (
 
 func main() {
 
-	config := setting.Load_config()
+	config := setting.LoadConfig()
 	err := setting.Connect(config)
 	if err != nil {
 		log.Fatal(err)

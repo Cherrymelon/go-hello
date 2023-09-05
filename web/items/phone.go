@@ -90,14 +90,14 @@ func GetPhoneOrder(c *fiber.Ctx) error {
 // @Failure      500  {object}  error
 // @Router       /info/phone_order [post]
 func CreatePhoneOrder(c *fiber.Ctx) error {
-	var instance []models.Order
-	order := new(models.Order)
-	if err := c.BodyParser(order); err != nil {
+	instance := new(models.Order)
+	if err := c.BodyParser(instance); err != nil {
 		log.Info("parser order failed")
 		return c.Status(503).SendString(err.Error())
 	}
-	setting.Db.Create(&instance)
-	return c.Status(201).JSON(instance)
+	result := setting.Db.Create(&instance)
+	log.Infof("create phone order %+v", result)
+	return c.Status(201).JSON(result.RowsAffected)
 }
 
 // UpdatePhoneOrder  godoc
@@ -115,11 +115,12 @@ func CreatePhoneOrder(c *fiber.Ctx) error {
 // @Router       /info/phone_order/{id} [put]
 func UpdatePhoneOrder(c *fiber.Ctx) error {
 	instance := new(models.Order)
-	id := c.Params("order_id")
+	id := c.Params("id")
 	if err := c.BodyParser(instance); err != nil {
 		log.Info("parser order failed")
 		return c.Status(503).SendString(err.Error())
 	}
-	setting.Db.Where("id=?", id).Updates(&instance)
+	result := setting.Db.Where("id=?", id).Updates(&instance)
+	log.Infof("result is %+v", result)
 	return c.Status(200).JSON(instance)
 }

@@ -38,7 +38,7 @@ type WebServer struct {
 	Prefork bool   `yaml:"Prefork"`
 }
 
-func Load_config() Config {
+func LoadConfig() Config {
 	err := copyFile("./dev.yaml", "./env.yaml")
 	if err != nil {
 		log.Fatal("copy file error")
@@ -88,8 +88,9 @@ func copyFile(src, dst string) error {
 var Db *gorm.DB
 
 func Connect(config Config) error {
+	var err error
 	dsn := fmt.Sprintf("%s:%s@tcp(%s:%d)/%s?charset=utf8mb4&parseTime=True&loc=Local", config.Database.User, config.Database.Password, config.Database.Host, config.Database.Port, config.Database.Db)
-	Db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
+	Db, err = gorm.Open(mysql.Open(dsn), &gorm.Config{})
 	if err != nil {
 		return err
 	}
