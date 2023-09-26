@@ -3,8 +3,10 @@ module go-hello
 go 1.20
 
 require (
+	github.com/badoux/checkmail v1.2.1
 	github.com/gofiber/fiber/v2 v2.48.0
 	github.com/gofiber/swagger v0.1.12
+	github.com/google/uuid v1.3.1
 	github.com/swaggo/swag v1.16.1
 	golang.org/x/crypto v0.7.0
 	gopkg.in/yaml.v3 v3.0.1
@@ -20,7 +22,6 @@ require (
 	github.com/go-openapi/spec v0.20.9 // indirect
 	github.com/go-openapi/swag v0.22.4 // indirect
 	github.com/go-sql-driver/mysql v1.7.0 // indirect
-	github.com/google/uuid v1.3.1 // indirect
 	github.com/jinzhu/inflection v1.0.0 // indirect
 	github.com/jinzhu/now v1.1.5 // indirect
 	github.com/josharian/intern v1.0.0 // indirect

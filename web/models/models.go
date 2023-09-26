@@ -1,7 +1,9 @@
 package models
 
 import (
+	guuid "github.com/google/uuid"
 	"gorm.io/gorm"
+	"time"
 )
 
 type Order struct {
@@ -20,8 +22,8 @@ type User struct {
 }
 
 type Session struct {
-	gorm.Model `json:"gorm_._model"`
-	SessionKey string `json:"session_key"`
-	UserId     int    `json:"user_id"`
-	ExpiresAt  int    `json:"expires_at"`
+	Sessionid guuid.UUID `gorm:"primaryKey" json:"Sessionid"`
+	Expires   time.Time  `json:"-"`
+	UserRefer uint       `json:"-"`
+	CreatedAt int64      `gorm:"autoCreateTime" json:"-" `
 }

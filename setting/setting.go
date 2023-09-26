@@ -67,18 +67,18 @@ func copyFile(src, dst string) error {
 			log.Fatalf("close file: %s error", file.Name())
 		}
 	}(file)
-	dst_file, err := os.OpenFile(dst, os.O_WRONLY|os.O_CREATE, 0644)
+	dstFile, err := os.OpenFile(dst, os.O_WRONLY|os.O_CREATE, 0644)
 	if err != nil {
 		return err
 	}
-	defer func(dst_file *os.File) {
-		err := dst_file.Close()
+	defer func(dstFile *os.File) {
+		err := dstFile.Close()
 		if err != nil {
-			log.Fatalf("close file: %s error", dst_file.Name())
+			log.Fatalf("close file: %s error", dstFile.Name())
 		}
-	}(dst_file)
+	}(dstFile)
 
-	_, err = io.Copy(dst_file, file)
+	_, err = io.Copy(dstFile, file)
 	if err != nil {
 		return err
 	}
