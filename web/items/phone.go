@@ -9,15 +9,15 @@ import (
 )
 
 type phone struct {
-	price int    `json:"price,omitempty"`
-	brand string `json:"brand,omitempty"`
-	ram   int    `json:"ram,omitempty"`
+	Price int    `json:"price,omitempty"`
+	Brand string `json:"brand,omitempty"`
+	Ram   int    `json:"ram,omitempty"`
 }
 
 var hash = map[string]phone{
-	"samsung": {price: 1000, brand: "samsung", ram: 4},
-	"apple":   {price: 2000, brand: "apple", ram: 8},
-	"xiaomi":  {price: 500, brand: "xiaomi", ram: 2},
+	"samsung": {Price: 1000, Brand: "samsung", Ram: 4},
+	"apple":   {Price: 2000, Brand: "apple", Ram: 8},
+	"xiaomi":  {Price: 500, Brand: "xiaomi", Ram: 2},
 }
 
 // Info  godoc

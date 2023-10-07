@@ -85,7 +85,7 @@ func copyFile(src, dst string) error {
 	return nil
 }
 
-var Db *gorm.DB
+var Db = new(gorm.DB)
 
 func Connect(config Config) error {
 	var err error

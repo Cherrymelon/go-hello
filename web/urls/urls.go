@@ -2,8 +2,8 @@ package urls
 
 import (
 	"github.com/gofiber/fiber/v2"
+	"go-hello/web/auth"
 	"go-hello/web/items"
-	"go-hello/web/login"
 )
 
 func Register(app *fiber.App) {
@@ -12,7 +12,9 @@ func Register(app *fiber.App) {
 	})
 
 	user := app.Group("/user")
-	user.Post("/login", login.Login)
+	user.Post("/login", auth.Login)
+	user.Post("/register", auth.Register)
+	user.Post("/logout", auth.Logout)
 
 	info := app.Group("/info")
 	info.Get("/:phone", phone.Info)

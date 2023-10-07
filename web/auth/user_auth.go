@@ -14,14 +14,25 @@ import (
 
 type Session models.Session
 
-var db = setting.Db
-
-func login(c *fiber.Ctx) error {
+// Login godoc
+// @Summary      Login
+// @Description  login by json
+// @Tags         User
+// @Accept       json
+// @Produce      json
+// @Param        user   body      object  true  "User"
+// @Success      200  {object}  any
+// @Failure      400  {object}  error
+// @Failure      404  {object}  error
+// @Failure      500  {object}  error
+// @Router       /user/login [post]
+func Login(c *fiber.Ctx) error {
+	var db = setting.Db
 	type LoginRequest struct {
 		User     string `json:"user"`
 		Password string `json:"password"`
 	}
-	var loginForm LoginRequest
+	loginForm := new(LoginRequest)
 	if err := c.BodyParser(loginForm); err != nil {
 		log.Error(err.Error())
 		return c.Status(403).SendString("parse error")
@@ -48,23 +59,26 @@ func login(c *fiber.Ctx) error {
 	return c.SendString("login")
 }
 
-func hashAndSalt(pwd []byte) string {
-	hash, _ := bcrypt.GenerateFromPassword(pwd, bcrypt.MinCost)
-	return string(hash)
-}
-
-func comparePasswords(hashedPwd string, plainPwd []byte) bool {
-	byteHash := []byte(hashedPwd)
-	err := bcrypt.CompareHashAndPassword(byteHash, plainPwd)
-	return err == nil
-}
-
-func register(c *fiber.Ctx) error {
+// Register godoc
+// @Summary      Register a user
+// @Description  register a user by json
+// @Tags         User
+// @Accept       json
+// @Produce      json
+// @Param        user   body      object  true  "User"
+// @Success      200  {object}  any
+// @Failure      400  {object}  error
+// @Failure      404  {object}  error
+// @Failure      500  {object}  error
+// @Router       /user/register [post]
+func Register(c *fiber.Ctx) error {
+	var db = setting.Db
 	type CreateUserRequest struct {
 		Password string `json:"password"`
 		Username string `json:"username"`
 		Email    string `json:"email"`
 	}
+	log.Info("db is", db)
 	json := new(CreateUserRequest)
 	err := c.BodyParser(json)
 	if err != nil {
@@ -74,17 +88,20 @@ func register(c *fiber.Ctx) error {
 	json.Password = hashAndSalt([]byte(json.Password))
 	err = checkmail.ValidateFormat(json.Email)
 	if err != nil {
+		log.Error("Invalid Email Addres")
 		return c.JSON(fiber.Map{
 			"code":    400,
 			"message": "Invalid Email Address",
 		})
 	}
 	user := models.User{
-		Email:    json.Email,
 		Password: json.Password,
+		Email:    json.Email,
 		Name:     json.Username,
 	}
-	result := db.Where("name=?", json.Username).First(&user)
+	find := models.User{}
+	//result := db.Where("name=?", json.Username).Find(&user)
+	result := db.First(&find, "name =?", json.Username)
 	if result.Error != gorm.ErrRecordNotFound {
 		return c.Status(403).SendString("register error,name exist")
 	}
@@ -109,13 +126,25 @@ func register(c *fiber.Ctx) error {
 	log.Info("register success,user {}", user)
 	return c.JSON(fiber.Map{
 		"code":    200,
-		"message": "sucess",
+		"message": "success",
 		"data":    session,
 	})
 }
 
-func logout(c *fiber.Ctx) error {
-
+// Logout godoc
+// @Summary      Logout
+// @Description  logout by json
+// @Tags         User
+// @Accept       json
+// @Produce      json
+// @Param        sessionid   body      object  true  "Session"
+// @Success      200  {object}  any
+// @Failure      400  {object}  error
+// @Failure      404  {object}  error
+// @Failure      500  {object}  error
+// @Router       /user/logout [post]
+func Logout(c *fiber.Ctx) error {
+	var db = setting.Db
 	json := new(Session)
 	if err := c.BodyParser(json); err != nil {
 		return c.JSON(fiber.Map{
@@ -143,4 +172,15 @@ func logout(c *fiber.Ctx) error {
 
 func SessionExpires() time.Time {
 	return time.Now().Add(5 * 24 * time.Hour)
+}
+
+func hashAndSalt(pwd []byte) string {
+	hash, _ := bcrypt.GenerateFromPassword(pwd, bcrypt.MinCost)
+	return string(hash)
+}
+
+func comparePasswords(hashedPwd string, plainPwd []byte) bool {
+	byteHash := []byte(hashedPwd)
+	err := bcrypt.CompareHashAndPassword(byteHash, plainPwd)
+	return err == nil
 }
